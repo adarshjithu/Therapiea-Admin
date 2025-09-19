@@ -23,3 +23,23 @@ export const updateCustomerStatus = async (customerId: string) => {
     throw new Error(message);
   }
 };
+export const blockUser = async (customerId: string) => {
+  try {
+    const res = await axiosInstance.patch(`/admin/customers/${customerId}/block`);
+    return res.data;
+  } catch (error) {
+    const message = errorHandler(error);
+    toast.error(message);
+    throw new Error(message);
+  }
+};
+export const deleteUser = async (customerId: string) => {
+  try {
+    const res = await axiosInstance.delete(`/admin/customers/${customerId}`);
+    return res.data;
+  } catch (error) {
+    const message = errorHandler(error);
+    toast.error(message);
+    throw new Error(message);
+  }
+};
