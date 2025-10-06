@@ -1,65 +1,64 @@
 'use client';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
-import { Eye, Trash2, RefreshCcw } from 'lucide-react';
+import { Eye, Trash2, RefreshCcw, PlusIcon } from 'lucide-react';
 import { SearchBox } from '@/components/FormElements/SearchBox/SearchBox';
 import { Pagination } from '@/components/ui/pagination';
 import { LoadingSpinner } from '@/components/Loading/TableLoading';
-import { useBlockUser, useChangeCustomerStatus, useDeleteUser, useGetAllCustomers } from '@/hooks/useCustomers';
+
 import Switch from '../ui-elements/Switch/Switch';
-import ViewUserModal from './_components/viewUserModal';
 import DeleteModal from '@/components/Modals/DeleteModal';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
+import { useChangeProductStatus, useDeleteProduct, useGetProducts } from '@/hooks/useProducts';
+import { useRouter } from 'next/navigation';
 
-interface User {
+interface Product {
   _id: string;
   name: string;
-  email: string;
-  phone: number;
-  role: 'user' | 'admin';
-  image?: string;
-  countryCode: string;
-  createdAt: string;
+  description: string;
+  quantity: number;
+  category: { _id: string; name: string };
+  images: string[];
+  price: { basePrice: number; sellingPrice: number };
+  videos?: string[];
   isActive: boolean;
-  isBlocked: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const UserTable: React.FC = () => {
-  const [tab, setTab] = useState<'all' | 'active' | 'inactive' | 'blocked' | 'deleted'>('all');
+const ProductTable: React.FC = () => {
+  const [tab, setTab] = useState<'all' | 'active' | 'inactive' | 'deleted'>('all');
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'createdAt'>('name');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(1);
-  const [user, setUser] = useState<any>();
+  const [product, setProduct] = useState<any>(null);
   const [deleteModal, setDeleteModal] = useState(false);
-
-  const [isViewUserModalOpen, setIsViewUserModalOpen] = useState(false);
+  const router = useRouter();
 
   const query: Record<string, any> = { search, sortBy, sortOrder: order, page };
-  if (tab === 'all') {
-    query.isDeleted = false;
-  }
+  if (tab === 'all') query.isDeleted = false;
   if (tab === 'active') query.isActive = true;
   if (tab === 'inactive') query.isActive = false;
-  if (tab === 'blocked') query.isBlocked = true;
   if (tab === 'deleted') query.isDeleted = true;
+  console.log(page);
 
-  const { data, refetch, isFetching, isLoading, } = useGetAllCustomers(query);
-  const { mutate: changeStatus } = useChangeCustomerStatus();
-  const { mutate: blockCustomer } = useBlockUser();
-  const { mutate: deleteUser } = useDeleteUser();
+  const { data, refetch, isFetching, isLoading } = useGetProducts(query);
+  const { mutate: changeStatus } = useChangeProductStatus();
+  const { mutate: deleteProduct } = useDeleteProduct();
 
   return (
     <div>
       <div className="w-full">
-        <Breadcrumb pageName="Customers" />
+        <Breadcrumb pageName="Products" />
       </div>
+
       {/* Toolbar */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
         {/* Tabs */}
         <div className="flex gap-2">
-          {['all', 'active', 'inactive', 'blocked', 'deleted'].map((t) => (
+          {['all', 'active', 'inactive', 'deleted'].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t as any)}
@@ -99,11 +98,11 @@ const UserTable: React.FC = () => {
 
         {/* Reload */}
         <button
-          onClick={() => refetch()}
-          className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 shadow transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+          onClick={() => router.push('/add-product')}
+          className="flex items-center gap-2 rounded-lg bg-[#2563EB] bg-gray-100 px-4 py-2 text-white shadow transition-colors"
           disabled={isFetching}
         >
-          <RefreshCcw size={18} className={isFetching ? 'animate-spin' : ''} />
+          <PlusIcon />
         </button>
       </div>
 
@@ -118,53 +117,50 @@ const UserTable: React.FC = () => {
         <Table className="mt-4">
           <TableHeader>
             <TableRow>
+              <TableHead>No</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Country Code</TableHead>
-              <TableHead>Created At</TableHead>
+              <TableHead>Quantity</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Images</TableHead>
+              <TableHead>Added On</TableHead>
+              <TableHead>Base Price</TableHead>
+              <TableHead>Selling Price</TableHead>
               <TableHead>Active</TableHead>
-              <TableHead>Blocked</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {data?.data?.data?.map((user: User) => (
-              <TableRow key={user._id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.countryCode}</TableCell>
-                <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+            {data?.data?.data.map((product: Product, index: number) => (
+              <TableRow key={product._id}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell className="font-medium">{product.name}</TableCell>
+                <TableCell>{product.quantity}</TableCell>
+                <TableCell>{product.category?.name || '-'}</TableCell>
                 <TableCell>
-                  <Switch
-                    checked={user.isActive}
-                    onChange={() => {
-                      changeStatus(user?._id);
-                    }}
-                  />
+                  <img className="w-12" src={product?.images[0]} alt="" />
                 </TableCell>
+                <TableCell>{new Date(product?.createdAt).toDateString()}</TableCell>
+                <TableCell>{product.price.basePrice}</TableCell>
+                <TableCell>{product.price.sellingPrice}</TableCell>
                 <TableCell>
                   <Switch
-                    checked={user.isBlocked}
-                    onChange={() => {
-                      blockCustomer(user?._id);
-                    }}
+                    checked={product.isActive}
+                    onChange={() => changeStatus({ productId: product._id, status: !product?.isActive })}
                   />
                 </TableCell>
                 <TableCell className="flex gap-2">
                   <Eye
                     onClick={() => {
-                      setUser(user);
-                      setIsViewUserModalOpen(true);
+                      setProduct(product);
+                      // open a view modal if you have one
                     }}
                     size={18}
                     className="cursor-pointer text-blue-600"
                   />
                   <Trash2
                     onClick={() => {
-                      setUser(user);
+                      setProduct(product);
                       setDeleteModal(true);
                     }}
                     size={18}
@@ -183,20 +179,18 @@ const UserTable: React.FC = () => {
         onPageChange={(pageCount) => setPage(pageCount)}
         totalPages={Math.ceil((data?.data?.total || 0) / 10)}
       />
-      {isViewUserModalOpen && (
-        <ViewUserModal user={user} isOpen={isViewUserModalOpen} onClose={() => setIsViewUserModalOpen(false)} />
-      )}
+
       <DeleteModal
         onCancel={() => setDeleteModal(false)}
         onConfirm={() => {
-          deleteUser(user?._id);
+          deleteProduct(product?._id);
           setDeleteModal(false);
         }}
         isOpen={deleteModal}
-        text={'User'}
+        text={'Product'}
       />
     </div>
   );
 };
 
-export default UserTable;
+export default ProductTable;

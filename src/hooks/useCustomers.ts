@@ -25,7 +25,7 @@ export const useChangeCustomerStatus = () => {
             ...oldData,
             data: {
               ...oldData.data,
-              customers: oldData.data.customers.map((customer: any) =>
+              data: oldData.data.data.map((customer: any) =>
                 customer._id === updatedCustomer?.data?._id
                   ? { ...customer, ...updatedCustomer.data } // merge new data
                   : customer,
@@ -54,7 +54,7 @@ export const useBlockUser = () => {
             ...oldData,
             data: {
               ...oldData.data,
-              customers: oldData.data.customers.map((customer: any) =>
+              data: oldData.data.data.map((customer: any) =>
                 customer._id === updatedCustomer?.data?._id
                   ? { ...customer, ...updatedCustomer.data }
                   : customer,

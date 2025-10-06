@@ -1,40 +1,36 @@
 'use client';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
-import { Eye, Trash2, RefreshCcw } from 'lucide-react';
+import { Trash2, RefreshCcw, Plus, Eye, PenIcon } from 'lucide-react';
 import { SearchBox } from '@/components/FormElements/SearchBox/SearchBox';
 import { Pagination } from '@/components/ui/pagination';
-import { LoadingSpinner } from '@/components/Loading/TableLoading';
-import { useBlockUser, useChangeCustomerStatus, useDeleteUser, useGetAllCustomers } from '@/hooks/useCustomers';
 import Switch from '../ui-elements/Switch/Switch';
-import ViewUserModal from './_components/viewUserModal';
 import DeleteModal from '@/components/Modals/DeleteModal';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
+import { useGetAllCategories } from '@/hooks/useCategories';
+import { ICategory } from '@/interface/ICategory';
+import { LoadingSpinner } from '@/components/Loading/TableLoading';
 
-interface User {
+interface Category {
   _id: string;
   name: string;
-  email: string;
-  phone: number;
-  role: 'user' | 'admin';
+  description: string;
   image?: string;
-  countryCode: string;
-  createdAt: string;
+  isDeleted: boolean;
   isActive: boolean;
-  isBlocked: boolean;
+  isProductsAssociated: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const UserTable: React.FC = () => {
-  const [tab, setTab] = useState<'all' | 'active' | 'inactive' | 'blocked' | 'deleted'>('all');
+const CategoryTable: React.FC = () => {
+  const [tab, setTab] = useState<'all' | 'active' | 'inactive' | 'deleted' | 'product' | 'accessories'>('all');
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'createdAt'>('name');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(1);
-  const [user, setUser] = useState<any>();
+  const [category, setCategory] = useState<ICategory | null>(null);
   const [deleteModal, setDeleteModal] = useState(false);
-
-  const [isViewUserModalOpen, setIsViewUserModalOpen] = useState(false);
 
   const query: Record<string, any> = { search, sortBy, sortOrder: order, page };
   if (tab === 'all') {
@@ -42,24 +38,23 @@ const UserTable: React.FC = () => {
   }
   if (tab === 'active') query.isActive = true;
   if (tab === 'inactive') query.isActive = false;
-  if (tab === 'blocked') query.isBlocked = true;
   if (tab === 'deleted') query.isDeleted = true;
+  if (tab == 'product') query.isProductsAssociated = true;
+  if (tab == 'accessories') query.isProductAssociated = false;
 
-  const { data, refetch, isFetching, isLoading, } = useGetAllCustomers(query);
-  const { mutate: changeStatus } = useChangeCustomerStatus();
-  const { mutate: blockCustomer } = useBlockUser();
-  const { mutate: deleteUser } = useDeleteUser();
+  const { data, isLoading } = useGetAllCategories(query);
 
   return (
     <div>
       <div className="w-full">
-        <Breadcrumb pageName="Customers" />
+        <Breadcrumb pageName="Categories" />
       </div>
+
       {/* Toolbar */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
         {/* Tabs */}
         <div className="flex gap-2">
-          {['all', 'active', 'inactive', 'blocked', 'deleted'].map((t) => (
+          {['all', 'active', 'inactive', 'deleted', 'product', 'accessories'].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t as any)}
@@ -99,104 +94,91 @@ const UserTable: React.FC = () => {
 
         {/* Reload */}
         <button
-          onClick={() => refetch()}
-          className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 shadow transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-          disabled={isFetching}
+          onClick={() => {}}
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white shadow transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
         >
-          <RefreshCcw size={18} className={isFetching ? 'animate-spin' : ''} />
+          <Plus />{' '}
         </button>
       </div>
 
       {/* Table */}
-      <div className="relative">
-        {isLoading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 dark:bg-gray-900/70">
-            <LoadingSpinner size={60} />
-          </div>
-        )}
-
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
         <Table className="mt-4">
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Country Code</TableHead>
-              <TableHead>Created At</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead>Image</TableHead>
               <TableHead>Active</TableHead>
-              <TableHead>Blocked</TableHead>
+
+              <TableHead>Created At</TableHead>
+              <TableHead>Products Associated</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {data?.data?.data?.map((user: User) => (
-              <TableRow key={user._id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.countryCode}</TableCell>
-                <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+            {data?.data?.data?.map((cat: ICategory) => (
+              <TableRow key={cat._id}>
+                <TableCell className="font-medium">{cat.name}</TableCell>
+                <TableCell>{cat.description}</TableCell>
                 <TableCell>
-                  <Switch
-                    checked={user.isActive}
-                    onChange={() => {
-                      changeStatus(user?._id);
-                    }}
-                  />
+                  {cat.image ? <img src={cat.image} alt={cat.name} className="h-10 w-10 rounded" /> : '—'}
                 </TableCell>
                 <TableCell>
-                  <Switch
-                    checked={user.isBlocked}
-                    onChange={() => {
-                      blockCustomer(user?._id);
-                    }}
-                  />
+                  <Switch checked={cat.isActive} onChange={() => {}} />
                 </TableCell>
+                <TableCell>{new Date(cat?.createdAt).toDateString()}</TableCell>
+                <TableCell>{cat.isProductsAssociated ? 'Yes' : 'No'}</TableCell>
                 <TableCell className="flex gap-2">
                   <Eye
                     onClick={() => {
-                      setUser(user);
-                      setIsViewUserModalOpen(true);
+                      setCategory(cat);
+                      setDeleteModal(true);
+                    }}
+                    size={18}
+                    className="cursor-pointer text-blue-600"
+                  />
+                  <PenIcon
+                    onClick={() => {
+                      setCategory(cat);
+                      setDeleteModal(true);
                     }}
                     size={18}
                     className="cursor-pointer text-blue-600"
                   />
                   <Trash2
                     onClick={() => {
-                      setUser(user);
+                      setCategory(cat);
                       setDeleteModal(true);
                     }}
                     size={18}
-                    className="text-red-600"
+                    className="cursor-pointer text-red-600"
                   />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </div>
+      )}
 
       {/* Pagination */}
-      <Pagination
-        page={page}
-        onPageChange={(pageCount) => setPage(pageCount)}
-        totalPages={Math.ceil((data?.data?.total || 0) / 10)}
-      />
-      {isViewUserModalOpen && (
-        <ViewUserModal user={user} isOpen={isViewUserModalOpen} onClose={() => setIsViewUserModalOpen(false)} />
-      )}
+      <Pagination page={page} onPageChange={(pageCount) => setPage(pageCount)} totalPages={Math.ceil(0 / 10)} />
+
+      {/* Delete Modal */}
       <DeleteModal
         onCancel={() => setDeleteModal(false)}
         onConfirm={() => {
-          deleteUser(user?._id);
+          // perform delete here
           setDeleteModal(false);
         }}
         isOpen={deleteModal}
-        text={'User'}
+        text={'Category'}
       />
     </div>
   );
 };
 
-export default UserTable;
+export default CategoryTable;

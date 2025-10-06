@@ -17,8 +17,8 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: 'Product',
-        url: '/product',
+        title: 'Products',
+        url: '/products',
         icon: Icons.BoxIcon, // change to the right icon name
         items: [],
       },
