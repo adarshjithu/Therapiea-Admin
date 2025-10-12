@@ -1,25 +1,23 @@
-import "@/css/satoshi.css";
-import "@/css/style.css";
 
-import { Sidebar } from "@/components/Layouts/sidebar";
-
-import "flatpickr/dist/flatpickr.min.css";
-import "jsvectormap/dist/jsvectormap.css";
-
-import { Header } from "@/components/Layouts/header";
-import type { Metadata } from "next";
-import NextTopLoader from "nextjs-toploader";
-import type { PropsWithChildren } from "react";
-import { Providers } from "./providers";
-import { Toaster } from "react-hot-toast";
+import '@/css/satoshi.css';
+import '@/css/style.css';
+import { Sidebar } from '@/components/Layouts/sidebar';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'jsvectormap/dist/jsvectormap.css';
+import { Header } from '@/components/Layouts/header';
+import type { Metadata } from 'next';
+import NextTopLoader from 'nextjs-toploader';
+import type { PropsWithChildren } from 'react';
+import { Providers } from './providers';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | NextAdmin - Next.js Dashboard Kit",
-    default: "NextAdmin - Next.js Dashboard Kit",
+    template: '%s | NextAdmin - Next.js Dashboard Kit',
+    default: 'NextAdmin - Next.js Dashboard Kit',
   },
   description:
-    "Next.js admin dashboard toolkit with 200+ templates, UI components, and integrations for fast dashboard development.",
+    'Next.js admin dashboard toolkit with 200+ templates, UI components, and integrations for fast dashboard development.',
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
@@ -27,17 +25,20 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
-          <Toaster/>
+          <Toaster />
           <NextTopLoader color="#5750F1" showSpinner={false} />
 
           <div className="flex min-h-screen">
             <Sidebar />
 
-            <div className="w-full bg-gray-2 dark:bg-[#020d1a] z-0">
+            <div className="z-0 w-full bg-gray-2 dark:bg-[#020d1a]">
               <Header />
 
-              <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10 z-0">
-                {children}
+              {/* Outer padding reduced, inner content nicely spaced */}
+              <main className="isolate z-0 mx-auto w-full max-w-screen-2xl overflow-hidden p-2 md:p-3 2xl:p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 md:p-6">
+                  {children}
+                </div>
               </main>
             </div>
           </div>

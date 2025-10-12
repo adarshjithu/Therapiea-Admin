@@ -9,7 +9,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 64, // default bigger size
 }) => {
   return (
-    <div className="flex justify-center items-center min-h-[200px]">
+    <div className="flex justify-center items-center">
       <svg
         aria-hidden="true"
         className="animate-spin text-gray-200 dark:text-gray-600 fill-blue-600"
