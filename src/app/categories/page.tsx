@@ -243,7 +243,7 @@ const CategoryTable: React.FC = () => {
           className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white shadow transition-colors hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
         >
           <Plus size={20} />
-          <span className="hidden sm:inline">Add Category</span>
+         
         </button>
       </div>
 
