@@ -69,8 +69,8 @@ function Page() {
     form.append(
       'price',
       JSON.stringify({
-        basePrice: formData.basePrice,
-        sellingPrice: formData.sellingPrice,
+        mrp: Number(formData.basePrice),
+        sellingPrice: Number(formData.sellingPrice),
       })
     );
     form.append('isActive', formData.isActive ? 'true' : 'false');
