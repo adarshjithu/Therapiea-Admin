@@ -3,46 +3,61 @@
 import { SearchIcon } from "@/assets/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSidebarContext } from "../sidebar/sidebar-context";
-import { MenuIcon } from "./icons";
 import { Notification } from "./notification";
 import { ThemeToggleSwitch } from "./theme-toggle";
 import { UserInfo } from "./user-info";
 
 export function Header() {
-  const { toggleSidebar, isMobile } = useSidebarContext();
+  const { isMobile } = useSidebarContext();
+  const pathname = usePathname();
+
+  // Convert pathname to page title
+  const getPageTitle = (path: string) => {
+    if (path === '/') return 'Dashboard';
+    
+    const segments = path.split('/').filter(Boolean);
+    const pageName = segments[0] || 'Dashboard';
+    
+    // Capitalize first letter and handle special cases
+    return pageName
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  const pageTitle = getPageTitle(pathname);
 
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between border-b border-stroke bg-white px-4 py-5 shadow-1 dark:border-stroke-dark dark:bg-gray-dark md:px-5 2xl:px-10">
-      <button
-        onClick={toggleSidebar}
-        className="rounded-lg border px-1.5 py-1 dark:border-stroke-dark dark:bg-[#020D1A] hover:dark:bg-[#FFFFFF1A] lg:hidden"
-      >
-        <MenuIcon />
-        <span className="sr-only">Toggle Sidebar</span>
-      </button>
-
-      {isMobile && (
-        <Link href={"/"} className="ml-2 max-[430px]:hidden min-[375px]:ml-4">
+      {/* Left side - Logo, Separator, Page Title */}
+      <div className="flex items-center gap-4">
+        {/* Logo with Text */}
+        <Link href={"/"} className="flex items-center gap-3">
           <Image
-            src={"/images/logo/logo-icon.svg"}
+            src={"/images/logo/logo.png"}
             width={32}
             height={32}
-            alt=""
-            role="presentation"
+            alt="THERAPEIA Logo"
+            className="h-8 w-8"
           />
+          <span className="text-xl font-bold text-gray-800 dark:text-white">
+            THERAPEIA
+          </span>
         </Link>
-      )}
 
-      <div className="max-xl:hidden flex">
-       
-        <h1 className="mb-0.5 text-heading-5 font-bold text-dark dark:text-white">
-          Dashboard
+        {/* Separator */}
+        <div className="h-6 w-px bg-gray-300 dark:bg-gray-600" />
+
+        {/* Page Title */}
+        <h1 className="text-lg font-semibold text-black dark:text-white">
+          {pageTitle}
         </h1>
-        
       </div>
 
-      <div className="flex flex-1 items-center justify-end gap-2 min-[375px]:gap-4">
+      {/* Right side - Search, Theme, Notifications, User */}
+      <div className="flex items-center gap-2 min-[375px]:gap-4">
         <div className="relative w-full max-w-[300px]">
           <input
             type="search"

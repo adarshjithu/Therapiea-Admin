@@ -3,6 +3,8 @@ import {
   ArrowDown,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   User,
   Box,
   Layers,
@@ -53,6 +55,8 @@ export function CalendarIcon(props: PropsType) {
   return <Calendar {...props} />;
 }
 
+export { Calendar };
+
 
 
 export function AlphabetIcon(props: PropsType) {
@@ -81,6 +85,14 @@ export function ArrowLeftIcon(props: PropsType) {
 
 export function SettingsIcon(props: PropsType) {
   return <Settings {...props} />;
+}
+
+export function ChevronLeftIcon(props: PropsType) {
+  return <ChevronLeft {...props} />;
+}
+
+export function ChevronRightIcon(props: PropsType) {
+  return <ChevronRight {...props} />;
 }
 
 // Note: ArrowDown is already imported and can be used directly
