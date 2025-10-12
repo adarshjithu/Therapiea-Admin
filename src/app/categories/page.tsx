@@ -7,8 +7,11 @@ import { Pagination } from '@/components/ui/pagination';
 import Switch from '../ui-elements/Switch/Switch';
 import DeleteModal from '@/components/Modals/DeleteModal';
 import AddCategoryModal from '@/components/Modals/AddCategoryModal';
+<<<<<<< Updated upstream
 import EditCategoryModal from '@/components/Modals/EditCategoryModal';
 import ViewCategoryModal from '@/components/Modals/ViewCategoryModal';
+=======
+>>>>>>> Stashed changes
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 import { 
   useGetAllCategories, 
@@ -40,10 +43,13 @@ const CategoryTable: React.FC = () => {
   const [category, setCategory] = useState<ICategory | null>(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
+<<<<<<< Updated upstream
   const [editModal, setEditModal] = useState(false);
   const [viewModal, setViewModal] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [editError, setEditError] = useState<string | null>(null);
+=======
+>>>>>>> Stashed changes
 
   const query: Record<string, any> = { search, sortBy, sortOrder: order, page };
   if (tab === 'all') {
@@ -243,7 +249,11 @@ const CategoryTable: React.FC = () => {
           className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white shadow transition-colors hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
         >
           <Plus size={20} />
+<<<<<<< Updated upstream
          
+=======
+          <span className="hidden sm:inline">Add Category</span>
+>>>>>>> Stashed changes
         </button>
       </div>
 
@@ -367,6 +377,17 @@ const CategoryTable: React.FC = () => {
           setCategory(null);
         }}
         category={category}
+      />
+
+      {/* Add Category Modal */}
+      <AddCategoryModal
+        isOpen={addModal}
+        onClose={() => setAddModal(false)}
+        onSubmit={(newCategory) => {
+          console.log('New category:', newCategory);
+          // TODO: Implement API call to create category
+          setAddModal(false);
+        }}
       />
     </div>
   );
