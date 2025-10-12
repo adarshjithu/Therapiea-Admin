@@ -6,7 +6,7 @@ import { SearchBox } from '@/components/FormElements/SearchBox/SearchBox';
 import { Pagination } from '@/components/ui/pagination';
 import Switch from '../ui-elements/Switch/Switch';
 import DeleteModal from '@/components/Modals/DeleteModal';
-import AddCategoryModal from '../../components/Modals/AddCategoryModal';
+import AddCategoryModal from '@/components/Modals/AddCategoryModal';
 import EditCategoryModal from '@/components/Modals/EditCategoryModal';
 import ViewCategoryModal from '@/components/Modals/ViewCategoryModal';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';

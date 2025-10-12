@@ -112,6 +112,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
           </div>
         )}
 
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Name */}
