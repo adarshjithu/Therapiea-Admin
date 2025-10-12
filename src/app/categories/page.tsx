@@ -8,8 +8,11 @@ import Switch from '../ui-elements/Switch/Switch';
 import DeleteModal from '@/components/Modals/DeleteModal';
 import AddCategoryModal from '@/components/Modals/AddCategoryModal';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import EditCategoryModal from '@/components/Modals/EditCategoryModal';
 import ViewCategoryModal from '@/components/Modals/ViewCategoryModal';
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
@@ -44,10 +47,13 @@ const CategoryTable: React.FC = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const [editModal, setEditModal] = useState(false);
   const [viewModal, setViewModal] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [editError, setEditError] = useState<string | null>(null);
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -250,7 +256,11 @@ const CategoryTable: React.FC = () => {
         >
           <Plus size={20} />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
          
+=======
+          <span className="hidden sm:inline">Add Category</span>
+>>>>>>> Stashed changes
 =======
           <span className="hidden sm:inline">Add Category</span>
 >>>>>>> Stashed changes
@@ -377,6 +387,17 @@ const CategoryTable: React.FC = () => {
           setCategory(null);
         }}
         category={category}
+      />
+
+      {/* Add Category Modal */}
+      <AddCategoryModal
+        isOpen={addModal}
+        onClose={() => setAddModal(false)}
+        onSubmit={(newCategory) => {
+          console.log('New category:', newCategory);
+          // TODO: Implement API call to create category
+          setAddModal(false);
+        }}
       />
 
       {/* Add Category Modal */}

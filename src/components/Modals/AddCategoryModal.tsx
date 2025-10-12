@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { X, Upload, Loader2, AlertCircle } from "lucide-react";
+=======
+import { X, Upload } from "lucide-react";
+>>>>>>> Stashed changes
 =======
 import { X, Upload } from "lucide-react";
 >>>>>>> Stashed changes
@@ -10,16 +14,22 @@ interface AddCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   onSubmit: (formData: FormData) => void;
   isLoading?: boolean;
   error?: string | null;
 =======
+=======
+>>>>>>> Stashed changes
   onSubmit: (category: {
     name: string;
     description: string;
     image?: File;
     isActive: boolean;
   }) => void;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
@@ -28,8 +38,11 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
   onClose,
   onSubmit,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   isLoading = false,
   error = null,
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 }) => {
@@ -39,6 +52,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isActive, setIsActive] = useState(true);
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   // Prevent body scroll when modal is open and handle ESC key
   useEffect(() => {
@@ -68,6 +82,8 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     }
   }, [isOpen, onClose]);
 =======
+=======
+>>>>>>> Stashed changes
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -80,6 +96,9 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +116,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
     const formData = new FormData();
     formData.append('name', name);
@@ -109,6 +129,8 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     onSubmit(formData);
     // Don't close modal here - let parent handle it on success
 =======
+=======
+>>>>>>> Stashed changes
     onSubmit({
       name,
       description,
@@ -121,12 +143,16 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     setImage(null);
     setImagePreview("");
     setIsActive(true);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   };
 
   if (!isOpen) return null;
 
   const modalContent = (
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     <div 
       className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-black/50 p-4 sm:p-6 md:p-8"
@@ -140,6 +166,10 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-black/50 p-4">
       <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
 >>>>>>> Stashed changes
+=======
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-black/50 p-4">
+      <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
+>>>>>>> Stashed changes
         {/* Close button */}
         <button
           onClick={onClose}
@@ -149,6 +179,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
         </button>
 
         {/* Header */}
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
           Add New Category
@@ -165,10 +196,15 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
         )}
 
 =======
+=======
+>>>>>>> Stashed changes
         <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-gray-100">
           Add New Category
         </h2>
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -219,7 +255,11 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
               {/* Image Preview */}
               {imagePreview && (
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 <div className="relative h-24 w-24 overflow-hidden rounded-lg border-2 border-gray-300 dark:border-gray-600">
+=======
+                <div className="relative h-24 w-24 overflow-hidden rounded-lg border border-gray-300 dark:border-gray-600">
+>>>>>>> Stashed changes
 =======
                 <div className="relative h-24 w-24 overflow-hidden rounded-lg border border-gray-300 dark:border-gray-600">
 >>>>>>> Stashed changes
@@ -228,6 +268,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
                     alt="Preview"
                     className="h-full w-full object-cover"
                   />
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
                   <button
                     type="button"
@@ -241,6 +282,8 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
                   </button>
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
                 </div>
               )}
 
@@ -248,7 +291,11 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
               <label
                 htmlFor="image-upload"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-3 transition hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
+=======
+                className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 transition hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
+>>>>>>> Stashed changes
 =======
                 className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 transition hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
 >>>>>>> Stashed changes
@@ -267,9 +314,12 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
               </label>
             </div>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
               PNG, JPG, GIF up to 10MB
             </p>
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
           </div>
@@ -301,6 +351,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
 
           {/* Actions */}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4">
             <button
               type="button"
@@ -308,17 +359,23 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
               disabled={isLoading}
               className="rounded-lg border border-gray-300 bg-white px-4 sm:px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
 =======
+=======
+>>>>>>> Stashed changes
           <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
               className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             >
               Cancel
             </button>
             <button
               type="submit"
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
               disabled={isLoading}
               className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 sm:px-5 py-2.5 text-sm font-medium text-white shadow transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-blue-800"
@@ -331,6 +388,11 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
               ) : (
                 'Add Category'
               )}
+=======
+              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
+            >
+              Add Category
+>>>>>>> Stashed changes
 =======
               className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
             >
