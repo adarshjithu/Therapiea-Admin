@@ -28,9 +28,12 @@ export function Logo() {
 
   return (
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <div className="mb-5">
       <img src="\images\product\icon.png" alt="asdf" />
 =======
+=======
+>>>>>>> Stashed changes
     <div className="mb-5 h-8 w-15">
       <Image
         src={theme === "dark" ? "/images/logo/logo.png" : "/images/logo/logo.png"}
@@ -39,6 +42,9 @@ export function Logo() {
         height={32}
         className="h-auto w-full"
       />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     </div>
   );
