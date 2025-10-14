@@ -25,7 +25,7 @@ export function useSidebarContext() {
 
 export function SidebarProvider({
   children,
-  defaultOpen = true,
+  defaultOpen = false,
 }: {
   children: React.ReactNode;
   defaultOpen?: boolean;
@@ -36,9 +36,8 @@ export function SidebarProvider({
   useEffect(() => {
     if (isMobile) {
       setIsOpen(false);
-    } else {
-      setIsOpen(true);
     }
+    // Remove the else clause that was automatically opening sidebar on desktop
   }, [isMobile]);
 
   function toggleSidebar() {

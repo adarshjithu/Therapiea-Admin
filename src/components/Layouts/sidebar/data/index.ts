@@ -1,5 +1,3 @@
-import * as Icons from '../icons';
-
 export const NAV_DATA = [
   {
     label: 'MAIN MENU',
@@ -7,43 +5,43 @@ export const NAV_DATA = [
       {
         title: 'Dashboard',
         url: '/',
-        icon: Icons.HomeIcon,
-        items: [],
-      },
-      {
-        title: 'Users',
-        url: '/customers',
-        icon: Icons.UserIcon, // or whatever you named the icon
-        items: [],
-      },
-      {
-        title: 'Products',
-        url: '/products',
-        icon: Icons.BoxIcon, // change to the right icon name
-        items: [],
-      },
-      {
-        title: 'Categories',
-        url: '/categories',
-        icon: Icons.CategoryIcon,
-        items: [],
-      },
-      {
-        title: 'Size',
-        url: '/size',
-        icon: Icons.SizingIcon,
+        icon: '/images/sidebar/home.png',
         items: [],
       },
       {
         title: 'Orders',
         url: '/orders',
-        icon: Icons.OrderIcon,
+        icon: '/images/sidebar/bag-2.png',
+        items: [],
+      },
+      {
+        title: 'Categories',
+        url: '/categories',
+        icon: '/images/sidebar/avalanche-(avax).png',
+        items: [],
+      },
+      {
+        title: 'Products',
+        url: '/products',
+        icon: 'Package',
+        items: [],
+      },
+      {
+        title: 'Customers',
+        url: '/customers',
+        icon: 'Users',
+        items: [],
+      },
+      {
+        title: 'Coupons',
+        url: '/coupons',
+        icon: 'Ticket',
         items: [],
       },
       {
         title: 'Settings',
         url: '/settings',
-        icon: Icons.SettingsIcon,
+        icon: '/images/sidebar/setting-2.png',
         items: [],
       },
     ],

@@ -6,8 +6,16 @@ import { SearchBox } from '@/components/FormElements/SearchBox/SearchBox';
 import { Pagination } from '@/components/ui/pagination';
 import Switch from '../ui-elements/Switch/Switch';
 import DeleteModal from '@/components/Modals/DeleteModal';
+import AddCategoryModal from '@/components/Modals/AddCategoryModal';
+import EditCategoryModal from '@/components/Modals/EditCategoryModal';
+import ViewCategoryModal from '@/components/Modals/ViewCategoryModal';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
-import { useGetAllCategories } from '@/hooks/useCategories';
+import { 
+  useGetAllCategories, 
+  useCreateCategory, 
+  useUpdateCategory, 
+  useDeleteCategory 
+} from '@/hooks/useCategories';
 import { ICategory } from '@/interface/ICategory';
 import { LoadingSpinner } from '@/components/Loading/TableLoading';
 
@@ -24,25 +32,113 @@ interface Category {
 }
 
 const CategoryTable: React.FC = () => {
-  const [tab, setTab] = useState<'all' | 'active' | 'inactive' | 'deleted' | 'product' | 'accessories'>('all');
+  const [tab, setTab] = useState<'all' | 'active' | 'inactive'>('all');
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'createdAt'>('name');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState<ICategory | null>(null);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [editError, setEditError] = useState<string | null>(null);
 
   const query: Record<string, any> = { search, sortBy, sortOrder: order, page };
   if (tab === 'all') {
     query.isDeleted = false;
   }
-  if (tab === 'active') query.isActive = true;
-  if (tab === 'inactive') query.isActive = false;
-  if (tab === 'deleted') query.isDeleted = true;
-  if (tab == 'product') query.isProductsAssociated = true;
-  if (tab == 'accessories') query.isProductAssociated = false;
+  if (tab === 'active') {
+    query.isActive = true;
+    query.isDeleted = false;
+  }
+  if (tab === 'inactive') {
+    query.isActive = false;
+    query.isDeleted = false;
+  }
 
   const { data, isLoading } = useGetAllCategories(query);
+  
+  // Fetch all categories to get accurate counts
+  const { data: allCategoriesData } = useGetAllCategories({ 
+    isDeleted: false, 
+    page: 1, 
+    limit: 1000 // Get all categories for counting
+  });
+
+  // Calculate counts from actual data (correct path: data?.data?.data)
+  const categories = allCategoriesData?.data?.data || [];
+  const totalCount = categories.length || 0;
+  const activeCount = categories.filter((cat: ICategory) => cat.isActive === true).length || 0;
+  const inactiveCount = categories.filter((cat: ICategory) => cat.isActive === false).length || 0;
+
+  // Debug log
+  console.log('Categories Data:', { 
+    total: totalCount, 
+    active: activeCount, 
+    inactive: inactiveCount,
+    categoriesArray: categories 
+  });
+
+  const createCategoryMutation = useCreateCategory();
+  const updateCategoryMutation = useUpdateCategory();
+  const deleteCategoryMutation = useDeleteCategory();
+
+  const handleCreate = (newCategory: any) => {
+    setAddError(null); // Clear previous errors
+    createCategoryMutation.mutate(newCategory, {
+      onSuccess: () => {
+        setAddModal(false);
+        setAddError(null);
+      },
+      onError: (error: any) => {
+        setAddError(error.message || 'Failed to create category');
+      }
+    });
+  };
+
+  const handleUpdate = (data: { _id: string; formData: FormData }) => {
+    setEditError(null); // Clear previous errors
+    updateCategoryMutation.mutate(
+      { categoryId: data._id, formData: data.formData },
+      {
+        onSuccess: () => {
+          setEditModal(false);
+          setCategory(null);
+          setEditError(null);
+        },
+        onError: (error: any) => {
+          setEditError(error.message || 'Failed to update category');
+        }
+      }
+    );
+  };
+
+  const handleDelete = () => {
+    if (category?._id) {
+      deleteCategoryMutation.mutate(category._id, {
+        onSuccess: () => {
+          setDeleteModal(false);
+          setCategory(null);
+        }
+      });
+    }
+  };
+
+  const handleToggleActive = (cat: ICategory) => {
+    // Send as JSON object (not FormData) for simple updates
+    const updatedData = {
+      name: cat.name,
+      description: cat.description,
+      isActive: !cat.isActive
+    };
+    
+    updateCategoryMutation.mutate({
+      categoryId: cat._id,
+      formData: updatedData
+    });
+  };
 
   return (
     <div>
@@ -52,21 +148,70 @@ const CategoryTable: React.FC = () => {
 
       {/* Toolbar */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
-        {/* Tabs */}
+        {/* Filter Tabs */}
         <div className="flex gap-2">
-          {['all', 'active', 'inactive', 'deleted', 'product', 'accessories'].map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t as any)}
-              className={`rounded-lg px-4 py-2 font-medium transition-colors ${
-                tab === t
-                  ? 'bg-blue-600 text-white shadow'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              {t.charAt(0).toUpperCase() + t.slice(1)}
-            </button>
-          ))}
+          <button
+            onClick={() => {
+              setTab('all');
+              setPage(1);
+            }}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              tab === 'all'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            <span>All Categories</span>
+            <span className={`rounded px-2 py-0.5 text-xs font-semibold ${
+              tab === 'all'
+                ? 'bg-blue-700 text-white'
+                : 'bg-white text-gray-800 dark:bg-gray-600 dark:text-gray-200'
+            }`}>
+              {totalCount}
+            </span>
+          </button>
+          
+          <button
+            onClick={() => {
+              setTab('active');
+              setPage(1);
+            }}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              tab === 'active'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            <span>Active Categories</span>
+            <span className={`rounded px-2 py-0.5 text-xs font-semibold ${
+              tab === 'active'
+                ? 'bg-blue-700 text-white'
+                : 'bg-white text-gray-800 dark:bg-gray-600 dark:text-gray-200'
+            }`}>
+              {activeCount}
+            </span>
+          </button>
+          
+          <button
+            onClick={() => {
+              setTab('inactive');
+              setPage(1);
+            }}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              tab === 'inactive'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            <span>Inactive Categories</span>
+            <span className={`rounded px-2 py-0.5 text-xs font-semibold ${
+              tab === 'inactive'
+                ? 'bg-blue-700 text-white'
+                : 'bg-white text-gray-800 dark:bg-gray-600 dark:text-gray-200'
+            }`}>
+              {inactiveCount}
+            </span>
+          </button>
         </div>
 
         {/* Search */}
@@ -92,12 +237,13 @@ const CategoryTable: React.FC = () => {
           </select>
         </div>
 
-        {/* Reload */}
+        {/* Add Category Button */}
         <button
-          onClick={() => {}}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white shadow transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+          onClick={() => setAddModal(true)}
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white shadow transition-colors hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
         >
-          <Plus />{' '}
+          <Plus size={20} />
+         
         </button>
       </div>
 
@@ -128,35 +274,44 @@ const CategoryTable: React.FC = () => {
                   {cat.image ? <img src={cat.image} alt={cat.name} className="h-10 w-10 rounded" /> : '—'}
                 </TableCell>
                 <TableCell>
-                  <Switch checked={cat.isActive} onChange={() => {}} />
+                  <Switch 
+                    checked={cat.isActive} 
+                    onChange={() => handleToggleActive(cat)} 
+                  />
                 </TableCell>
                 <TableCell>{new Date(cat?.createdAt).toDateString()}</TableCell>
                 <TableCell>{cat.isProductsAssociated ? 'Yes' : 'No'}</TableCell>
                 <TableCell className="flex gap-2">
-                  <Eye
+                  <button
+                    onClick={() => {
+                      setCategory(cat);
+                      setViewModal(true);
+                    }}
+                    className="cursor-pointer text-blue-600 hover:text-blue-700"
+                    title="View"
+                  >
+                    <Eye size={18} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCategory(cat);
+                      setEditModal(true);
+                    }}
+                    className="cursor-pointer text-green-600 hover:text-green-700"
+                    title="Edit"
+                  >
+                    <PenIcon size={18} />
+                  </button>
+                  <button
                     onClick={() => {
                       setCategory(cat);
                       setDeleteModal(true);
                     }}
-                    size={18}
-                    className="cursor-pointer text-blue-600"
-                  />
-                  <PenIcon
-                    onClick={() => {
-                      setCategory(cat);
-                      setDeleteModal(true);
-                    }}
-                    size={18}
-                    className="cursor-pointer text-blue-600"
-                  />
-                  <Trash2
-                    onClick={() => {
-                      setCategory(cat);
-                      setDeleteModal(true);
-                    }}
-                    size={18}
-                    className="cursor-pointer text-red-600"
-                  />
+                    className="cursor-pointer text-red-600 hover:text-red-700"
+                    title="Delete"
+                  >
+                    <Trash2 size={18} />
+                  </button>
                 </TableCell>
               </TableRow>
             ))}
@@ -169,13 +324,49 @@ const CategoryTable: React.FC = () => {
 
       {/* Delete Modal */}
       <DeleteModal
-        onCancel={() => setDeleteModal(false)}
-        onConfirm={() => {
-          // perform delete here
+        onCancel={() => {
           setDeleteModal(false);
+          setCategory(null);
         }}
+        onConfirm={handleDelete}
         isOpen={deleteModal}
-        text={'Category'}
+        text={`Category "${category?.name}"`}
+      />
+
+      {/* Add Category Modal */}
+      <AddCategoryModal
+        isOpen={addModal}
+        onClose={() => {
+          setAddModal(false);
+          setAddError(null);
+        }}
+        onSubmit={handleCreate}
+        isLoading={createCategoryMutation.isPending}
+        error={addError}
+      />
+      
+      {/* Edit Category Modal */}
+      <EditCategoryModal
+        isOpen={editModal}
+        onClose={() => {
+          setEditModal(false);
+          setCategory(null);
+          setEditError(null);
+        }}
+        onSubmit={handleUpdate}
+        category={category}
+        isLoading={updateCategoryMutation.isPending}
+        error={editError}
+      />
+
+      {/* View Category Modal */}
+      <ViewCategoryModal
+        isOpen={viewModal}
+        onClose={() => {
+          setViewModal(false);
+          setCategory(null);
+        }}
+        category={category}
       />
     </div>
   );

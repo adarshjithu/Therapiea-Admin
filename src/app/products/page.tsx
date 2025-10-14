@@ -44,7 +44,7 @@ const ProductTable: React.FC = () => {
   if (tab === 'deleted') query.isDeleted = true;
   console.log(page);
 
-  const { data, refetch, isFetching, isLoading } = useGetProducts(query);
+  const { data, isFetching, isLoading } = useGetProducts(query);
   const { mutate: changeStatus } = useChangeProductStatus();
   const { mutate: deleteProduct } = useDeleteProduct();
 
@@ -99,7 +99,7 @@ const ProductTable: React.FC = () => {
         {/* Reload */}
         <button
           onClick={() => router.push('/add-product')}
-          className="flex items-center gap-2 rounded-lg bg-[#2563EB] bg-gray-100 px-4 py-2 text-white shadow transition-colors"
+          className="flex items-center gap-2 rounded-lg bg-[#2563EB]  px-4 py-2 text-white shadow transition-colors"
           disabled={isFetching}
         >
           <PlusIcon />

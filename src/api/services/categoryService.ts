@@ -11,13 +11,17 @@ export const getAllCategories = async (query: any) => {
     throw new Error(message);
   }
 };
-export const updateCategory = async (categoryId: string, formData: string) => {
+export const updateCategory = async (categoryId: string, formData: any) => {
   try {
-    const res = await axiosInstance.put(`/admin/categories/${categoryId}`, formData);
+    const config = formData instanceof FormData
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+    
+    const res = await axiosInstance.put(`/admin/categories/${categoryId}`, formData, config);
     return res.data;
   } catch (error) {
     const message = errorHandler(error);
-    toast.error(message);
+    // Don't show toast here - error will be displayed in modal
     throw new Error(message);
   }
 };
@@ -33,7 +37,7 @@ export const deleteCategory = async (categoryId: string) => {
 };
 export const getCategoryById = async (categoryId: string) => {
   try {
-    const res = await axiosInstance.delete(`/admin/categories/${categoryId}`);
+    const res = await axiosInstance.get(`/admin/categories/${categoryId}`);
     return res.data;
   } catch (error) {
     const message = errorHandler(error);
@@ -41,13 +45,17 @@ export const getCategoryById = async (categoryId: string) => {
     throw new Error(message);
   }
 };
-export const createCategory = async (formData:any) => {
+export const createCategory = async (formData: FormData) => {
   try {
-    const res = await axiosInstance.post(`/admin/categories`,formData);
+    const res = await axiosInstance.post(`/admin/categories`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return res.data;
   } catch (error) {
     const message = errorHandler(error);
-    toast.error(message);
+    // Don't show toast here - error will be displayed in modal
     throw new Error(message);
   }
 };
