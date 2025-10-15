@@ -17,7 +17,7 @@ function Media({images,setImages,video,setVideo,errors,setFormData,formData}:Rec
 
   // Remove single image
   const removeImage = (index: number) => {
-    const newImages = images.filter((_, i) => i !== index)
+    const newImages = images.filter((_: File, i: number) => i !== index)
     setImages(newImages)
     setFormData({...formData,images:newImages})
   };
@@ -52,7 +52,7 @@ function Media({images,setImages,video,setVideo,errors,setFormData,formData}:Rec
         {/* Preview Selected Images - Gallery Style */}
         {images.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
-            {images.map((img, index) => (
+            {images.map((img: File, index: number) => (
               <div
                 key={index}
                 className="relative w-full overflow-hidden rounded-lg bg-gray-100"

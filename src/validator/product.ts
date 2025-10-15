@@ -15,21 +15,21 @@ export const addProductSchema = Yup.object().shape({
   category: Yup.string()
     .required('Category is required'),
 
-  basePrice: Yup.number()
-    .typeError('Base price must be a number')
-    .required('Base price is required')
-    .min(0, 'Base price cannot be negative'),
+  mrp: Yup.number()
+    .typeError('MRP must be a number')
+    .required('MRP is required')
+    .min(0, 'MRP cannot be negative'),
 
   sellingPrice: Yup.number()
     .typeError('Selling price must be a number')
     .required('Selling price is required')
     .min(0, 'Selling price cannot be negative')
     .test(
-      'is-greater-than-base',
-      'Selling price must be greater than or equal to base price',
+      'is-greater-than-mrp',
+      'Selling price must be less than or equal to MRP',
       function (value) {
-        const { basePrice } = this.parent;
-        return Number(value) >= Number(basePrice);
+        const { mrp } = this.parent;
+        return Number(value) <= Number(mrp);
       }
     ),
 

@@ -16,7 +16,7 @@ export interface IAddProductForm {
   category: string;
   isActive: boolean;
   richDescription: string;
-  basePrice: string;
+  mrp: string;
   sellingPrice: string;
   stock: number;
   images: string[];
@@ -37,7 +37,7 @@ const initialForm: IAddProductForm = {
   category: '',
   isActive: true,
   richDescription: '',
-  basePrice: '',
+  mrp: '',
   sellingPrice: '',
   stock: 0,
   images: [],
@@ -69,7 +69,7 @@ function Page() {
     form.append(
       'price',
       JSON.stringify({
-        mrp: Number(formData.basePrice),
+        mrp: Number(formData.mrp),
         sellingPrice: Number(formData.sellingPrice),
       })
     );

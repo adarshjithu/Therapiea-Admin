@@ -14,21 +14,21 @@ function Pricing({ setFormData, formData,errors }: IPricing) {
       <h1 className="text-xl font-semibold text-gray-800">Pricing</h1>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Base Price */}
+        {/* MRP */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Base Price</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">MRP</label>
           <input
             type="number"
-            name="basePrice"
-            value={formData?.basePrice}
+            name="mrp"
+            value={formData?.mrp}
             onChange={(e: any) => {
-              setFormData({ ...formData, basePrice: e.target.value });
+              setFormData({ ...formData, mrp: e.target.value });
             }}
-            placeholder="Enter base price"
+            placeholder="Enter MRP"
             className="w-full rounded-md border border-gray-300 bg-[#F3F4F6] px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-            {errors?.basePrice && (
-              <span className="mt-2 block text-sm font-medium text-red-500">{errors?.basePrice}</span>
+            {errors?.mrp && (
+              <span className="mt-2 block text-sm font-medium text-red-500">{errors?.mrp}</span>
             )}
         </div>
 
