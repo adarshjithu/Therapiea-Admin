@@ -4,6 +4,8 @@ import { SearchIcon } from "@/assets/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { useSidebarContext } from "../sidebar/sidebar-context";
 import { Notification } from "./notification";
 import { ThemeToggleSwitch } from "./theme-toggle";
@@ -12,6 +14,12 @@ import { UserInfo } from "./user-info";
 export function Header() {
   const { isMobile } = useSidebarContext();
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Convert pathname to page title
   const getPageTitle = (path: string) => {
@@ -35,13 +43,17 @@ export function Header() {
       <div className="flex items-center gap-4">
         {/* Logo with Text */}
         <Link href={"/"} className="flex items-center gap-3">
-          <Image
-            src={"/images/logo/logo.png"}
-            width={32}
-            height={32}
-            alt="THERAPEIA Logo"
-            className="h-8 w-8"
-          />
+          {mounted && (
+            <Image
+              src={theme === "dark" ? "/images/logo/logo2.png" : "/images/logo/logo.png"} 
+              width={32}
+              height={32}
+              alt="THERAPEIA Logo"
+              className="h-8 w-8"
+              key={theme} // Force re-render on theme change
+            />
+          )}
+          {!mounted && <div className="h-8 w-8" />}
           <span className="text-xl font-bold text-gray-800 dark:text-white">
             THERAPEIA
           </span>
