@@ -111,59 +111,62 @@ export function Sidebar() {
                            <>
                             <MenuItem
                                className={cn(
-                                 "flex items-center py-3 transition-all duration-200 hover:!bg-black hover:!text-white",
-                                 isOpen ? "justify-start gap-3 px-3" : "justify-center",
+                                 "flex items-center py-3 transition-all duration-200 hover:!bg-black hover:!text-white px-3",
                                  item.items.some(({ url }) => url === pathname) && "!bg-black !text-white"
                                )}
                                isActive={false}
                               onClick={() => toggleExpanded(item.title)}
                             >
-                               {(() => {
-                                 const iconName = typeof item.icon === 'string' ? item.icon : '';
-                                 const IconComponent = iconMap[iconName];
-                                 
-                                 if (IconComponent) {
-                                   return (
-                                     <div className="w-7 h-[18px] flex items-center justify-center flex-shrink-0">
-                                       <IconComponent 
-                                         className={cn(
-                                           "w-5 h-5 transition-all duration-200",
-                                           item.items.some(({ url }) => url === pathname) 
-                                             ? "text-white" 
-                                             : "text-[#717171] group-hover:text-white"
-                                         )}
-                                         strokeWidth={1.5}
-                                       />
-                                     </div>
-                                   );
-                                 } else if (iconName.startsWith('/')) {
-                                   return (
-                                     <Image
-                                       src={iconName}
-                                       alt={item.title}
-                                       width={32}
-                                       height={20}
-                                       className={cn(
-                                         "w-8 h-5 flex-shrink-0 object-contain transition-all duration-200",
-                                         item.items.some(({ url }) => url === pathname) 
-                                           ? "brightness-0 invert" 
-                                           : "group-hover:brightness-0 group-hover:invert"
-                                       )}
-                                     />
-                                   );
-                                 }
-                                 return null;
-                               })()}
-                               {isOpen && (
-                                 <span className={cn(
-                                   "text-sm font-medium",
-                                   item.items.some(({ url }) => url === pathname) 
-                                     ? "!text-white" 
-                                     : "text-gray-700 dark:text-gray-200 group-hover:!text-white"
-                                 )}>
-                                   {item.title}
-                                 </span>
-                               )}
+                               <div className="flex items-center gap-3 w-full">
+                                 {(() => {
+                                   const iconName = typeof item.icon === 'string' ? item.icon : '';
+                                   const IconComponent = iconMap[iconName];
+                                   
+                                   if (IconComponent) {
+                                     return (
+                                       <div className="w-8 h-[18px] flex items-center justify-center flex-shrink-0">
+                                         <IconComponent 
+                                           className={cn(
+                                             "w-5 h-5 transition-all duration-200",
+                                             item.items.some(({ url }) => url === pathname) 
+                                               ? "text-white" 
+                                               : "text-[#717171] group-hover:text-white"
+                                           )}
+                                           strokeWidth={1.5}
+                                         />
+                                       </div>
+                                     );
+                                   } else if (iconName.startsWith('/')) {
+                                     return (
+                                       <div className="w-8 h-5 flex items-center justify-center flex-shrink-0">
+                                         <Image
+                                           src={iconName}
+                                           alt={item.title}
+                                           width={32}
+                                           height={20}
+                                           className={cn(
+                                             "w-8 h-5 object-contain transition-all duration-200",
+                                             item.items.some(({ url }) => url === pathname) 
+                                               ? "brightness-0 invert" 
+                                               : "group-hover:brightness-0 group-hover:invert"
+                                           )}
+                                         />
+                                       </div>
+                                     );
+                                   }
+                                   return null;
+                                 })()}
+                                 {isOpen && (
+                                   <span className={cn(
+                                     "text-sm font-medium",
+                                     item.items.some(({ url }) => url === pathname) 
+                                       ? "!text-white" 
+                                       : "text-gray-700 dark:text-gray-200 group-hover:!text-white"
+                                   )}>
+                                     {item.title}
+                                   </span>
+                                 )}
+                               </div>
                             </MenuItem>
                              
                            </>
@@ -178,60 +181,63 @@ export function Sidebar() {
                                <>
                               <MenuItem
                                    className={cn(
-                                     "flex items-center py-3 transition-all duration-200 hover:!bg-black hover:!text-white",
-                                     isOpen ? "justify-start gap-3 px-3" : "justify-center",
+                                     "flex items-center py-3 transition-all duration-200 hover:!bg-black hover:!text-white px-3",
                                      pathname === href && "!bg-black !text-white"
                                    )}
                                 as="link"
                                 href={href}
                                    isActive={false}
                                  >
-                                   {(() => {
-                                     const iconName = typeof item.icon === 'string' ? item.icon : '';
-                                     const IconComponent = iconMap[iconName];
-                                     
-                                     if (IconComponent) {
-                                       return (
-                                         <div className="w-7 h-[18px] flex items-center justify-center flex-shrink-0">
-                                           <IconComponent 
-                                             className={cn(
-                                               "w-5 h-5 transition-all duration-200",
-                                               pathname === href 
-                                                 ? "text-white" 
-                                                 : "text-[#717171] group-hover:text-white"
-                                             )}
-                                             strokeWidth={1.5}
-                                           />
-                                         </div>
-                                       );
-                                     } else if (iconName.startsWith('/')) {
-                                       return (
-                                         <Image
-                                           src={iconName}
-                                           alt={item.title}
-                                           width={32}
-                                           height={20}
-                                           className={cn(
-                                             "w-8 h-5 flex-shrink-0 object-contain transition-all duration-200",
-                                             pathname === href 
-                                               ? "brightness-0 invert" 
-                                               : "group-hover:brightness-0 group-hover:invert"
-                                           )}
-                                         />
-                                       );
-                                     }
-                                     return null;
-                                   })()}
-                                   {isOpen && (
-                                     <span className={cn(
-                                       "text-sm font-medium",
-                                       pathname === href 
-                                         ? "!text-white" 
-                                         : "text-gray-700 dark:text-gray-200 group-hover:!text-white"
-                                     )}>
-                                       {item.title}
-                                     </span>
-                                   )}
+                                   <div className="flex items-center gap-3 w-full">
+                                     {(() => {
+                                       const iconName = typeof item.icon === 'string' ? item.icon : '';
+                                       const IconComponent = iconMap[iconName];
+                                       
+                                       if (IconComponent) {
+                                         return (
+                                           <div className="w-8 h-[18px] flex items-center justify-center flex-shrink-0">
+                                             <IconComponent 
+                                               className={cn(
+                                                 "w-5 h-5 transition-all duration-200",
+                                                 pathname === href 
+                                                   ? "text-white" 
+                                                   : "text-[#717171] group-hover:text-white"
+                                               )}
+                                               strokeWidth={1.5}
+                                             />
+                                           </div>
+                                         );
+                                       } else if (iconName.startsWith('/')) {
+                                         return (
+                                           <div className="w-8 h-5 flex items-center justify-center flex-shrink-0">
+                                             <Image
+                                               src={iconName}
+                                               alt={item.title}
+                                               width={32}
+                                               height={20}
+                                               className={cn(
+                                                 "w-8 h-5 object-contain transition-all duration-200",
+                                                 pathname === href 
+                                                   ? "brightness-0 invert" 
+                                                   : "group-hover:brightness-0 group-hover:invert"
+                                               )}
+                                             />
+                                           </div>
+                                         );
+                                       }
+                                       return null;
+                                     })()}
+                                     {isOpen && (
+                                       <span className={cn(
+                                         "text-sm font-medium",
+                                         pathname === href 
+                                           ? "!text-white" 
+                                           : "text-gray-700 dark:text-gray-200 group-hover:!text-white"
+                                       )}>
+                                         {item.title}
+                                       </span>
+                                     )}
+                                   </div>
                               </MenuItem>
                                  
                                </>
